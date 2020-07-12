@@ -1,4 +1,4 @@
-import 'package:coins/price_screen.dart';
+import 'package:coins/screens/price_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());

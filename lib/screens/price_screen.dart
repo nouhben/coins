@@ -1,4 +1,5 @@
-import 'package:coins/coin_data.dart';
+import 'package:coins/services/coin_data.dart';
+import 'package:coins/services/price.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +34,27 @@ class _PriceScreenState extends State<PriceScreen> {
     return dp;
   }
 
+  String _priceBTCUSD = '';
+  @override
+  void initState() {
+    super.initState();
+    //get the bitcoin data
+  }
+
+  void _getPricingData(String cryptoCurrencyName) async {
+    PriceModel priceModel = PriceModel();
+    var data = await priceModel.getPrice(cryptoCurrencyName); //priceModel.getBTCUSD();
+    setState(() {
+      if (data != null) {
+        print('DATA Success 200');
+        _priceBTCUSD = data['last'].toString();
+      } else {
+        print('DATA FAIL 404');
+        _priceBTCUSD = '?';
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +76,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? USD',
+                  '1 BTC = $_priceBTCUSD USD',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
@@ -86,7 +108,8 @@ class _PriceScreenState extends State<PriceScreen> {
                     itemExtent: 32.0,
                     diameterRatio: 0.75,
                     onSelectedItemChanged: (selectedIndex) {
-                      print(selectedIndex);
+                      //print(selectedIndex);
+                      _getPricingData(currenciesList[selectedIndex]);
                     },
                   ),
           ),
