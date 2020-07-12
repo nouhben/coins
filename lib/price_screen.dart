@@ -1,3 +1,5 @@
+import 'package:coins/coin_data.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PriceScreen extends StatefulWidget {
@@ -6,6 +8,31 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  String _selectedItem = currenciesList[0] ?? 'USD';
+  List<DropdownMenuItem<String>> _getDropdownItems() {
+    List<DropdownMenuItem<String>> dp = [];
+    for (String currency in currenciesList) {
+      dp.add(
+        DropdownMenuItem(
+          child: Text(currency),
+          value: currency,
+        ),
+      );
+    }
+    return dp;
+  }
+
+  List<Text> _getDropdownItemsIOS() {
+    List<Text> dp = [];
+    for (String currency in currenciesList) {
+      dp.add(Text(
+        currency,
+        style: TextStyle(color: Colors.white),
+      ));
+    }
+    return dp;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +69,26 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.black,
-            child: null,
+            child: Theme.of(context).platform == TargetPlatform.android
+                ? DropdownButton<String>(
+                    onChanged: (value) {
+                      print(value);
+                      setState(() {
+                        _selectedItem = value;
+                      });
+                    },
+                    value: _selectedItem,
+                    items: _getDropdownItems(),
+                  )
+                : CupertinoPicker(
+                    children: _getDropdownItemsIOS(),
+                    backgroundColor: Colors.black,
+                    itemExtent: 32.0,
+                    diameterRatio: 0.75,
+                    onSelectedItemChanged: (selectedIndex) {
+                      print(selectedIndex);
+                    },
+                  ),
           ),
         ],
       ),
