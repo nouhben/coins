@@ -39,6 +39,31 @@ class _PriceScreenState extends State<PriceScreen> {
     return dp;
   }
 
+  Widget _getDropdown() {
+    if (Theme.of(context).platform == TargetPlatform.android) {
+      return DropdownButton<String>(
+        onChanged: (value) {
+          print(value);
+          setState(() {
+            _selectedCurrency = value;
+          });
+        },
+        value: _selectedCurrency,
+        items: _getDropdownItems(),
+      );
+    }
+    return CupertinoPicker(
+      children: _getDropdownItemsIOS(),
+      backgroundColor: Colors.black,
+      itemExtent: 32.0,
+      diameterRatio: 0.75,
+      onSelectedItemChanged: (selectedIndex) {
+        //print(selectedIndex);
+        _getPricingData(currenciesList[selectedIndex]);
+      },
+    );
+  }
+
   //String _cryptoName = cryptoList[0];
   @override
   void initState() {
@@ -153,27 +178,7 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.black,
-            child: Theme.of(context).platform == TargetPlatform.android
-                ? DropdownButton<String>(
-                    onChanged: (value) {
-                      print(value);
-                      setState(() {
-                        _selectedCurrency = value;
-                      });
-                    },
-                    value: _selectedCurrency,
-                    items: _getDropdownItems(),
-                  )
-                : CupertinoPicker(
-                    children: _getDropdownItemsIOS(),
-                    backgroundColor: Colors.black,
-                    itemExtent: 32.0,
-                    diameterRatio: 0.75,
-                    onSelectedItemChanged: (selectedIndex) {
-                      //print(selectedIndex);
-                      _getPricingData(currenciesList[selectedIndex]);
-                    },
-                  ),
+            child: _getDropdown(),
           ),
         ],
       ),
