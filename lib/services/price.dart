@@ -11,7 +11,7 @@ class PriceModel {
   }
 
   Future<dynamic> getPrice(String currencies) async {
-    String _url = '$apiURL/global/ticker/BTC${currencies.toUpperCase()}';
+    String _url = '$apiURL/global/ticker/${currencies.toUpperCase()}';
     var priceData = await NetworkHelper(url: _url).getData();
     return priceData;
   }
